@@ -17,4 +17,9 @@ feature 'Enemy hit points' do
     click_button('Attack')
     expect(page).to have_content 'Frank attacked Alf'
   end
+  scenario 'player 2s hp decreases by 10' do
+    sign_in_and_play
+    click_button('Attack')
+    expect(page).to have_content 'Alf: 50/60 HP'
+  end
 end
