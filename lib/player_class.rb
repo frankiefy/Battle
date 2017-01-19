@@ -7,8 +7,4 @@ class Player
     @hit_points = hit_points
   end
 
-
-
-
-
 end
