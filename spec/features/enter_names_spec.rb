@@ -1,6 +1,7 @@
 require 'spec_helper.rb'
 
-feature 'Enter names' do
+
+feature 'Enter names', :type => :feature do
   scenario 'submitting names' do
     sign_in_and_play
     expect(page).to have_content 'Frank vs. Alf'
@@ -15,7 +16,7 @@ feature 'Enemy hit points' do
   scenario 'player 1 attacks player 2' do
     sign_in_and_play
     click_button('Attack')
-    expect(page).to have_content 'Frank attacked Alf'
+    expect(page).to have_content 'Alf: 50/60 HP'
   end
   scenario 'player 2s hp decreases by 10' do
     sign_in_and_play
