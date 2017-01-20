@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require './lib/player_class'
-
+require './lib/game_class'
 
 
 class Battle < Sinatra::Base
@@ -9,61 +9,60 @@ class Battle < Sinatra::Base
     erb :index
   end
 
+  before do
+    @current_game = Game.instance
+  end
+
   post '/names' do
-    $player1 = Player.new(params[:player_1_name])
-    $player2 = Player.new(params[:player_2_name])
+    player1 = Player.new(params[:player_1_name])
+    player2 = Player.new(params[:player_2_name])
+    @current_game = Game.create(player1,player2)
     redirect '/play'
   end
 
   get '/play' do
-    @player_1_name = $player1.name
-    @player_2_name = $player2.name
-    @player_1_hp = $player1.hit_points
-    @player_2_hp = $player2.hit_points
+    @player_1_name = @current_game.player1.name
+    @player_2_name = @current_game.player2.name
+    @player_1_hp = @current_game.player1.hit_points
+    @player_2_hp = @current_game.player2.hit_points
     erb :play
   end
 
   get '/attack2' do
-    if $player1.my_turn == true
-      $player2.hit_points -= rand(1..10)
-      $player1.my_turn = false
-      $player2.my_turn = true
-      if $player2.hit_points > 0
-        redirect '/play'
-      else
-        redirect '/1winner'
-      end
+    if @current_game.player1.my_turn == true
+      @current_game.attack2
     else
       redirect '/play'
+    end
+    if @current_game.player2.hit_points > 0
+      redirect '/play'
+    else
+      redirect '/1winner'
     end
   end
 
   get '/attack1' do
-    if $player2.my_turn == true
-      $player1.hit_points -= rand(1..10)
-      $player2.my_turn = false
-      $player1.my_turn = true
-      if $player1.hit_points > 0
-        redirect '/play'
-      else
-        redirect '/2winner'
-      end
-    elsif $player2.my_turn == false
+    if @current_game.player2.my_turn == true
+      @current_game.attack1
+    else
       redirect '/play'
+    end
+    if @current_game.player1.hit_points > 0
+      redirect '/play'
+    else
+      redirect '/2winner'
     end
   end
 
   get '/1winner' do
-    @player_1_name = $player1.name
+    @player_1_name = @current_game.player1.name
     erb :one_wins
   end
 
   get '/2winner' do
-    @player_2_name = $player2.name
+    @player_2_name = @current_game.player2.name
     erb :two_wins
   end
-
-
 
 
 
