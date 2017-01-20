@@ -15,12 +15,7 @@ feature 'Enemy hit points' do
   end
   scenario 'player 1 attacks player 2' do
     sign_in_and_play
-    click_button('Attack')
-    expect(page).to have_content 'Alf: 50/60 HP'
-  end
-  scenario 'player 2s hp decreases by 10' do
-    sign_in_and_play
-    click_button('Attack')
-    expect(page).to have_content 'Alf: 50/60 HP'
+    click_button('Attack Player 2')
+    expect(page).to_not have_content 'Alf: 60/60 HP'
   end
 end
